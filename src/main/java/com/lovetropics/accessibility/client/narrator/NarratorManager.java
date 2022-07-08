@@ -1,6 +1,7 @@
 package com.lovetropics.accessibility.client.narrator;
 
 import com.lovetropics.accessibility.LoveAccessibility;
+import com.lovetropics.accessibility.client.narrator.ui.ContainerNarrator;
 import com.lovetropics.accessibility.client.narrator.world.WorldNarrator;
 import com.mojang.text2speech.Narrator;
 import net.minecraft.client.Minecraft;
@@ -59,7 +60,8 @@ public final class NarratorManager {
         };
 
         final WorldNarrator world = new WorldNarrator(output);
-        return new Narrators(world);
+        final ContainerNarrator container = new ContainerNarrator(output);
+        return new Narrators(world, container);
     }
 
     private static Narrator getNarrator() {
@@ -70,9 +72,10 @@ public final class NarratorManager {
         return Minecraft.getInstance().options.narratorStatus;
     }
 
-    private record Narrators(WorldNarrator world) {
+    private record Narrators(WorldNarrator world, ContainerNarrator container) {
         public void tick(final Minecraft minecraft, final ClientLevel level) {
             world.tick(minecraft, level);
+            container.tick(minecraft);
         }
     }
 }
