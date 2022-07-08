@@ -1,13 +1,10 @@
 package com.lovetropics.accessibility.client.narrator.ui;
 
 import com.lovetropics.accessibility.client.narrator.NarratorOutput;
+import com.lovetropics.accessibility.client.narrator.description.ItemDescription;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.network.chat.CommonComponents;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -62,22 +59,11 @@ public final class ContainerNarrator {
     }
 
     private void narrateTarget(final Target target) {
-        final ItemStack item = target.item();
-        if (!item.isEmpty()) {
-            output.accept(getItemNarration(item));
+        final ItemDescription description = ItemDescription.describe(target.item());
+        if (description != null) {
+            output.accept(description.component());
         } else {
             output.acceptBlank();
-        }
-    }
-
-    private Component getItemNarration(final ItemStack item) {
-        final MutableComponent prefix = new TextComponent(item.getCount() + " ");
-        final Component typeName = item.getItem().getName(item);
-        if (item.hasCustomHoverName()) {
-            final Component displayName = item.getHoverName();
-            return prefix.append(CommonComponents.joinForNarration(displayName, typeName));
-        } else {
-            return prefix.append(typeName);
         }
     }
 

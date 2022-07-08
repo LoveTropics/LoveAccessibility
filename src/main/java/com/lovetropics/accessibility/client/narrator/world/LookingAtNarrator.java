@@ -1,6 +1,7 @@
 package com.lovetropics.accessibility.client.narrator.world;
 
 import com.lovetropics.accessibility.client.narrator.NarratorOutput;
+import com.lovetropics.accessibility.client.narrator.description.BlockDescription;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -53,7 +54,8 @@ public final class LookingAtNarrator {
         final BlockPos pos = blockResult.getBlockPos();
         final BlockState state = level.getBlockState(pos);
         if (!state.isAir() && !isSubmergedIn(minecraft, state.getBlock())) {
-            return new LookingAtBlock(pos, state.getBlock());
+            final BlockDescription details = BlockDescription.describe(level, pos);
+            return new LookingAtBlock(pos, state.getBlock(), details);
         }
         return null;
     }
@@ -67,10 +69,14 @@ public final class LookingAtNarrator {
         Component narration();
     }
 
-    private record LookingAtBlock(BlockPos pos, Block block) implements Target {
+    private record LookingAtBlock(BlockPos pos, Block block, @Nullable BlockDescription details) implements Target {
         @Override
         public Component narration() {
-            return block.getName();
+            if (details != null) {
+                return CommonComponents.joinForNarration(block.getName(), details.component());
+            } else {
+                return block.getName();
+            }
         }
     }
 
