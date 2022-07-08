@@ -1,0 +1,26 @@
+modLoader="javafml"
+loaderVersion="[36,)"
+license="All Rights Reserved"
+
+[[mods]]
+modId="love_accessibility"
+version="${file.jarVersion}"
+displayName="Love Accessibility"
+authors="LoveTropics"
+credits=""
+description='''
+'''
+
+[[dependencies.love_accessibility]]
+    modId="forge"
+    mandatory=true
+    versionRange="[36,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.love_accessibility]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.18.2,)"
+    ordering="NONE"
+    side="BOTH"

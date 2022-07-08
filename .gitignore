@@ -1,0 +1,19 @@
+# IDEA
+.idea/
+out/
+
+# Eclipse
+bin/
+.settings/
+*.project
+*.classpath
+*.launch
+
+# Gradle
+build/
+.gradle/
+
+# Minecraft
+run/
+
+libs/*.jar
