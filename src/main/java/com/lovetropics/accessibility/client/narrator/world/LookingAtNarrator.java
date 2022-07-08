@@ -5,10 +5,13 @@ import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 
 import javax.annotation.Nullable;
@@ -39,6 +42,8 @@ public final class LookingAtNarrator {
     private Target evaluateTarget(final Minecraft minecraft, final ClientLevel level, final HitResult hitResult) {
         if (hitResult instanceof BlockHitResult blockResult) {
             return evaluateBlockTarget(minecraft, level, blockResult);
+        } else if (hitResult instanceof EntityHitResult entityResult) {
+            return new LookingAtEntity(entityResult.getEntity());
         }
         return null;
     }
@@ -66,6 +71,29 @@ public final class LookingAtNarrator {
         @Override
         public Component narration() {
             return block.getName();
+        }
+    }
+
+    private record LookingAtEntity(Entity entity) implements Target {
+        @Override
+        public Component narration() {
+            final Component typeName = entity.getType().getDescription();
+            final Component customName = entity.getCustomName();
+            if (customName != null) {
+                return CommonComponents.joinForNarration(typeName, customName);
+            } else {
+                return typeName;
+            }
+        }
+
+        @Override
+        public boolean equals(final Object o) {
+            return o instanceof LookingAtEntity that && that.entity.getUUID().equals(entity.getUUID());
+        }
+
+        @Override
+        public int hashCode() {
+            return entity.getUUID().hashCode();
         }
     }
 }
