@@ -70,7 +70,9 @@ dependencies {
 
   final def nvda_controller = 'dev.gegy:nvda-controller-client-java:1.0.0'
   library nvda_controller
-  shade nvda_controller
+  shade(nvda_controller) {
+    transitive = false
+  }
 
   if (System.getProperty("idea.sync.active") != "true") {
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
