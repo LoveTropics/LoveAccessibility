@@ -15,6 +15,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 @Mod.EventBusSubscriber(modid = LoveAccessibility.ID, value = Dist.CLIENT)
 public final class NarratorManager {
@@ -51,20 +52,19 @@ public final class NarratorManager {
     }
 
     private static Narrators createNarrators() {
-        final Narrator narrator = getNarrator();
-        final NarratorOutput output = message -> {
-            if (narrator.active() && !message.isBlank()) {
-                narrator.clear();
-                narrator.say(message, true);
-            }
-        };
+        final NarratorOutput output = getNarratorOutput();
 
         final WorldNarrator world = new WorldNarrator(output);
         final ContainerNarrator container = new ContainerNarrator(output);
         return new Narrators(world, container);
     }
 
-    private static Narrator getNarrator() {
+    private static NarratorOutput getNarratorOutput() {
+        final Narrator narrator = Objects.requireNonNullElseGet(NvdaNarrator.get(), NarratorManager::getVanillaNarrator);
+        return NarratorOutput.of(narrator);
+    }
+
+    private static Narrator getVanillaNarrator() {
         return ObfuscationReflectionHelper.getPrivateValue(NarratorChatListener.class, NarratorChatListener.INSTANCE, "f_93313_");
     }
 

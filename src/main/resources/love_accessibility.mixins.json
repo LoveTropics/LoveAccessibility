@@ -6,6 +6,7 @@
   "mixins": [
   ],
   "client": [
+    "NarratorChatListenerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

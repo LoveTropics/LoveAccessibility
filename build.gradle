@@ -51,11 +51,28 @@ minecraft {
   }
 }
 
+configurations {
+  library
+  implementation.extendsFrom library
+}
+
+repositories {
+  maven { url = 'https://maven.gegy.dev' }
+}
+
 dependencies {
   minecraft "net.minecraftforge:forge:$minecraft_version-$forge_version"
 
+  library 'dev.gegy:nvda-controller-client-java:1.0.0'
+
   if (System.getProperty("idea.sync.active") != "true") {
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+  }
+}
+
+minecraft.runs.all {
+  lazyToken('minecraft_classpath') {
+    configurations.library.copyRecursive().resolve().collect { it.absolutePath }.join(File.pathSeparator)
   }
 }
 
