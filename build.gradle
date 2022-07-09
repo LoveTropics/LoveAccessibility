@@ -12,6 +12,10 @@ buildscript {
   }
 }
 
+plugins {
+  id 'com.github.johnrengelman.shadow' version '7.1.2'
+}
+
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.parchmentmc.librarian.forgegradle'
 apply plugin: 'org.spongepowered.mixin'
@@ -52,6 +56,7 @@ minecraft {
 }
 
 configurations {
+  shade
   library
   implementation.extendsFrom library
 }
@@ -63,7 +68,9 @@ repositories {
 dependencies {
   minecraft "net.minecraftforge:forge:$minecraft_version-$forge_version"
 
-  library 'dev.gegy:nvda-controller-client-java:1.0.0'
+  final def nvda_controller = 'dev.gegy:nvda-controller-client-java:1.0.0'
+  library nvda_controller
+  shade nvda_controller
 
   if (System.getProperty("idea.sync.active") != "true") {
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
@@ -80,7 +87,20 @@ mixin {
   add sourceSets.main, "love_accessibility.refmap.json"
 }
 
+shadowJar {
+  configurations = [project.configurations.shade]
+  classifier = ''
+}
+
+reobf {
+  shadowJar {}
+}
+
+build.dependsOn shadowJar
+build.dependsOn reobfShadowJar
+
 jar {
+  classifier = 'slim'
   manifest {
     attributes([
         "Specification-Title"     : "love-accessibility",
