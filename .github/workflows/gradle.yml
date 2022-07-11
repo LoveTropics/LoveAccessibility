@@ -17,10 +17,13 @@ jobs:
         distribution: 'temurin'
 
     - name: Build with Gradle
-      id: build
+      uses: gradle/gradle-build-action@v2
+      with:
+        arguments: build
+
+    - name: Locate built JARfile
+      id: jar
       run: |
-          chmod +x gradlew
-          ./gradlew build
           rm build/libs/*-slim.jar
           echo "##[set-output name=jarfile;]$(ls -1 build/libs/)"
 
@@ -28,4 +31,4 @@ jobs:
       uses: actions/upload-artifact@v2.2.3
       with:
           name: jdk17
-          path: build/libs/${{ steps.build.outputs.jarfile }}
+          path: build/libs/${{ steps.jar.outputs.jarfile }}
