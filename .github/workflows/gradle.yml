@@ -1,0 +1,30 @@
+name: Java CI with Gradle
+
+on: [push]
+
+  jdk17:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Setup JDK 17
+      uses: actions/setup-java@v2
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+
+    - name: Build with Gradle
+      id: build
+      run: |
+          chmod +x gradlew
+          ./gradlew build
+          rm build/libs/*-slim.jar
+          echo "##[set-output name=jarfile;]$(ls -1 build/libs/)"
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2.2.3
+      with:
+          name: jdk17
+          path: build/libs/${{ steps.build.outputs.jarfile }}
