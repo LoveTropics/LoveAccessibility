@@ -21,7 +21,6 @@ apply plugin: 'org.parchmentmc.librarian.forgegradle'
 apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'eclipse'
 
-mod_version = "0.1.0"
 group = "com.lovetropics"
 archivesBaseName = "love-accessibility"
 
