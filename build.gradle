@@ -21,9 +21,17 @@ apply plugin: 'org.parchmentmc.librarian.forgegradle'
 apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'eclipse'
 
-version = "0.1.0"
+mod_version = "0.1.0"
 group = "com.lovetropics"
 archivesBaseName = "love-accessibility"
+
+
+if (System.getenv('GITHUB_RUN_NUMBER')) {
+    project.buildnumber = System.getenv('GITHUB_RUN_NUMBER')
+    version = "${mod_version}+${buildnumber}-gha"
+} else {
+    version = "${mod_version}"
+}
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
