@@ -24,6 +24,7 @@ apply plugin: 'eclipse'
 group = "com.lovetropics"
 archivesBaseName = "love-accessibility"
 
+ext.buildnumber = 0
 
 if (System.getenv('GITHUB_RUN_NUMBER')) {
     project.buildnumber = System.getenv('GITHUB_RUN_NUMBER')
