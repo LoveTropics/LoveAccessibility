@@ -1,5 +1,7 @@
 package com.lovetropics.accessibility.client.narrator.description;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.CommonComponents;
@@ -13,10 +15,10 @@ import net.minecraft.world.level.block.entity.SignBlockEntity;
 import javax.annotation.Nullable;
 
 public record BlockDescription(Component component) {
-    public static BlockDescription describe(final Level level, final BlockPos pos) {
+    public static BlockDescription describe(final Minecraft minecraft, final Level level, final BlockPos pos) {
         final BlockEntity entity = level.getBlockEntity(pos);
         if (entity instanceof SignBlockEntity sign) {
-            return describeSign(sign);
+            return describeSign(minecraft.player, sign);
         } else if (entity instanceof CampfireBlockEntity campfire) {
             return describeInventory(campfire.getItems());
         }
@@ -24,10 +26,13 @@ public record BlockDescription(Component component) {
         return null;
     }
 
-    private static BlockDescription describeSign(final SignBlockEntity sign) {
-        Component message = sign.getMessage(0, false);
-        for (int i = 1; i < SignBlockEntity.LINES; i++) {
-            message = CommonComponents.joinForNarration(message, sign.getMessage(i, false));
+    private static BlockDescription describeSign(LocalPlayer player, final SignBlockEntity sign) {
+        Component message = player == null ? sign.getFrontText().getMessage(0, false)
+                : sign.getTextFacingPlayer(player).getMessage(0, false);
+        // Was using SignBlockEntity.LINES but that no longer seems to exist
+        for (int i = 1; i < 4; i++) {
+            message = CommonComponents.joinForNarration(message, player == null ? sign.getFrontText().getMessage(i, false)
+                    : sign.getTextFacingPlayer(player).getMessage(i, false));
         }
         return new BlockDescription(message);
     }

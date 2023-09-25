@@ -3,16 +3,15 @@ package com.lovetropics.accessibility.client.narrator;
 import com.lovetropics.accessibility.LoveAccessibility;
 import com.lovetropics.accessibility.client.narrator.ui.ContainerNarrator;
 import com.lovetropics.accessibility.client.narrator.world.WorldNarrator;
+import com.lovetropics.accessibility.mixin.GameNarratorAccessor;
 import com.mojang.text2speech.Narrator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.NarratorStatus;
-import net.minecraft.client.gui.chat.NarratorChatListener;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
@@ -65,11 +64,11 @@ public final class NarratorManager {
     }
 
     private static Narrator getVanillaNarrator() {
-        return ObfuscationReflectionHelper.getPrivateValue(NarratorChatListener.class, NarratorChatListener.INSTANCE, "f_93313_");
+        return ((GameNarratorAccessor) (Minecraft.getInstance().getNarrator())).getNarrator();
     }
 
     private static NarratorStatus getNarratorStatus() {
-        return Minecraft.getInstance().options.narratorStatus;
+        return Minecraft.getInstance().options.narrator().get();
     }
 
     private record Narrators(WorldNarrator world, ContainerNarrator container) {

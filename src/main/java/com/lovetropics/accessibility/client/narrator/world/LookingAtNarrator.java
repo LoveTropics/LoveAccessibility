@@ -54,7 +54,7 @@ public final class LookingAtNarrator {
         final BlockPos pos = blockResult.getBlockPos();
         final BlockState state = level.getBlockState(pos);
         if (!state.isAir() && !isSubmergedIn(minecraft, state.getBlock())) {
-            final BlockDescription details = BlockDescription.describe(level, pos);
+            final BlockDescription details = BlockDescription.describe(minecraft, level, pos);
             return new LookingAtBlock(pos, state.getBlock(), details);
         }
         return null;

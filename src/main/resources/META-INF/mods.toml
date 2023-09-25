@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[36,)"
+loaderVersion="[41,)"
 license="All Rights Reserved"
 
 [[mods]]
@@ -14,13 +14,13 @@ description='''
 [[dependencies.love_accessibility]]
     modId="forge"
     mandatory=true
-    versionRange="[36,)"
+    versionRange="[46,)"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.love_accessibility]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.18.2,)"
+    versionRange="[1.20.1,)"
     ordering="NONE"
     side="BOTH"

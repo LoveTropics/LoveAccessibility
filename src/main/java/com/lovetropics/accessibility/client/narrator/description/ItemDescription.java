@@ -3,7 +3,6 @@ package com.lovetropics.accessibility.client.narrator.description;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nullable;
@@ -18,7 +17,7 @@ public record ItemDescription(Component component) {
     }
 
     private static Component describeComponent(final ItemStack item) {
-        final MutableComponent prefix = new TextComponent(item.getCount() + " ");
+        final MutableComponent prefix = Component.literal(item.getCount() + " ");
         final Component typeName = item.getItem().getName(item);
         if (item.hasCustomHoverName()) {
             final Component displayName = item.getHoverName();

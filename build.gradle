@@ -1,19 +1,18 @@
 buildscript {
   repositories {
     maven { url = 'https://maven.minecraftforge.net' }
-    maven { url = 'https://maven.parchmentmc.org' }
     maven { url = 'https://repo.spongepowered.org/maven' }
     mavenCentral()
   }
   dependencies {
-    classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
-    classpath 'org.parchmentmc:librarian:1.+'
     classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
   }
 }
 
 plugins {
-  id 'com.github.johnrengelman.shadow' version '7.1.2'
+  id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+  id 'com.github.johnrengelman.shadow' version '8.1.1'
+  id 'org.parchmentmc.librarian.forgegradle' version '1.+'
 }
 
 apply plugin: 'net.minecraftforge.gradle'
@@ -99,7 +98,7 @@ mixin {
 
 shadowJar {
   configurations = [project.configurations.shade]
-  classifier = ''
+  archiveClassifier.set('')
 }
 
 reobf {
@@ -110,7 +109,7 @@ build.dependsOn shadowJar
 build.dependsOn reobfShadowJar
 
 jar {
-  classifier = 'slim'
+  archiveClassifier = 'slim'
   manifest {
     attributes([
         "Specification-Title"     : "love-accessibility",
