@@ -11,6 +11,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.CampfireBlockEntity;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
+import net.minecraft.world.level.block.entity.SignText;
 
 import javax.annotation.Nullable;
 
@@ -30,7 +31,7 @@ public record BlockDescription(Component component) {
         Component message = player == null ? sign.getFrontText().getMessage(0, false)
                 : sign.getTextFacingPlayer(player).getMessage(0, false);
         // Was using SignBlockEntity.LINES but that no longer seems to exist
-        for (int i = 1; i < 4; i++) {
+        for (int i = 1; i < SignText.LINES; i++) {
             message = CommonComponents.joinForNarration(message, player == null ? sign.getFrontText().getMessage(i, false)
                     : sign.getTextFacingPlayer(player).getMessage(i, false));
         }
