@@ -28,7 +28,7 @@ public final class LookingAtNarrator {
     }
 
     public void tick(final Minecraft minecraft, final ClientLevel level) {
-        final Target newTarget = evaluateTarget(minecraft, level, minecraft.hitResult);
+        final Target newTarget = minecraft.screen == null ? evaluateTarget(minecraft, level, minecraft.hitResult) : null;
         if (!Objects.equals(currentTarget, newTarget)) {
             currentTarget = newTarget;
             if (newTarget != null) {
@@ -40,7 +40,7 @@ public final class LookingAtNarrator {
     }
 
     @Nullable
-    private Target evaluateTarget(final Minecraft minecraft, final ClientLevel level, final HitResult hitResult) {
+    private Target evaluateTarget(final Minecraft minecraft, final ClientLevel level, @Nullable final HitResult hitResult) {
         if (hitResult instanceof BlockHitResult blockResult) {
             return evaluateBlockTarget(minecraft, level, blockResult);
         } else if (hitResult instanceof EntityHitResult entityResult) {
