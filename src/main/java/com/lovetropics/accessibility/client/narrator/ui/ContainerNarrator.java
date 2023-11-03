@@ -5,6 +5,7 @@ import com.lovetropics.accessibility.client.narrator.description.ItemDescription
 import net.minecraft.SharedConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -30,17 +31,17 @@ public final class ContainerNarrator {
         }
 
         if (minecraft.screen instanceof AbstractContainerScreen<?> containerScreen) {
-            tickContainer(containerScreen);
+            tickContainer(minecraft.player, containerScreen);
         } else {
             lastTarget = null;
         }
     }
 
-    private void tickContainer(final AbstractContainerScreen<?> containerScreen) {
+    private void tickContainer(@Nullable final Player player, final AbstractContainerScreen<?> containerScreen) {
         final Target target = evaluateTarget(containerScreen);
         if (!Objects.equals(target, lastTarget)) {
             if (target != null) {
-                narrateTarget(target);
+                narrateTarget(player, target);
             } else {
                 output.acceptBlank();
             }
@@ -58,8 +59,8 @@ public final class ContainerNarrator {
         return null;
     }
 
-    private void narrateTarget(final Target target) {
-        final ItemDescription description = ItemDescription.describe(target.item());
+    private void narrateTarget(@Nullable final Player player, final Target target) {
+        final ItemDescription description = ItemDescription.describe(player, target.item());
         if (description != null) {
             output.accept(description.component());
         } else {
