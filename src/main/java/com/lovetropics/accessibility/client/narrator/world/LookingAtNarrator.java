@@ -9,6 +9,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -87,6 +88,8 @@ public final class LookingAtNarrator {
             final Component customName = entity.getCustomName();
             if (customName != null) {
                 return CommonComponents.joinForNarration(typeName, customName);
+            } else if (entity instanceof final Player player) {
+                return player.getName();
             } else {
                 return typeName;
             }
