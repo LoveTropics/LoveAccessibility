@@ -1,8 +1,8 @@
 package com.lovetropics.accessibility;
 
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -12,9 +12,5 @@ public class LoveAccessibility {
     public static final Logger LOGGER = LogManager.getLogger(ID);
 
     public LoveAccessibility() {
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
-    }
-
-    private void setup(final FMLCommonSetupEvent event) {
     }
 }

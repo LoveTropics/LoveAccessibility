@@ -8,15 +8,15 @@ import com.mojang.text2speech.Narrator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.NarratorStatus;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
 
-@Mod.EventBusSubscriber(modid = LoveAccessibility.ID, value = Dist.CLIENT)
+@EventBusSubscriber(modid = LoveAccessibility.ID, value = Dist.CLIENT)
 public final class NarratorManager {
     private static Narrators narrators;
 
@@ -26,11 +26,7 @@ public final class NarratorManager {
     }
 
     @SubscribeEvent
-    public static void onClientTick(final TickEvent.ClientTickEvent event) {
-        if (event.phase == TickEvent.Phase.START) {
-            return;
-        }
-
+    public static void onClientTick(final ClientTickEvent.Post event) {
         final Minecraft minecraft = Minecraft.getInstance();
         final ClientLevel level = minecraft.level;
 

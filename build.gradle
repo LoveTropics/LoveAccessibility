@@ -1,24 +1,11 @@
-buildscript {
-  repositories {
-    maven { url = 'https://maven.minecraftforge.net' }
-    maven { url = 'https://repo.spongepowered.org/maven' }
-    mavenCentral()
-  }
-  dependencies {
-    classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
-  }
-}
-
 plugins {
-  id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+  id 'eclipse'
+  id 'idea'
+  id 'java-library'
+  id 'maven-publish'
   id 'com.github.johnrengelman.shadow' version '8.1.1'
-  id 'org.parchmentmc.librarian.forgegradle' version '1.+'
+  id 'net.neoforged.moddev' version '1.0.0'
 }
-
-apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'org.parchmentmc.librarian.forgegradle'
-apply plugin: 'org.spongepowered.mixin'
-apply plugin: 'eclipse'
 
 group = "com.lovetropics"
 archivesBaseName = "love-accessibility"
@@ -32,32 +19,41 @@ if (System.getenv('GITHUB_RUN_NUMBER')) {
     version = "${mod_version}"
 }
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
-minecraft {
-  mappings channel: 'parchment', version: "${parchment_version}-${minecraft_version}"
+neoForge {
+  version = project.neo_version
+
+  parchment {
+    minecraftVersion = minecraft_version
+    mappingsVersion = parchment_version
+  }
+
   runs {
     client {
-      workingDirectory project.file('run')
-      property 'forge.logging.console.level', 'info'
-      arg "-mixin.config=love_accessibility.mixins.json"
-      jvmArg '-Dmixin.env.disableRefMap=true'
-      mods {
-        love_accessibility {
-          sources sourceSets.main
-        }
-      }
+      client()
+      programArguments.addAll '--username', 'Dev###'
     }
+
     server {
-      workingDirectory project.file('run')
-      property 'forge.logging.console.level', 'info'
-      arg "-mixin.config=love_accessibility.mixins.json"
-      jvmArg '-Dmixin.env.disableRefMap=true'
-      mods {
-        love_accessibility {
-          sources sourceSets.main
-        }
-      }
+      server()
+      programArgument '--nogui'
+    }
+
+    data {
+      data()
+      programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
+    }
+
+    configureEach {
+      logLevel = org.slf4j.event.Level.INFO
+    }
+  }
+
+  mods {
+    "${project.mod_id}" {
+      sourceSet sourceSets.main
+      sourceSet sourceSets.test
     }
   }
 }
@@ -73,27 +69,22 @@ repositories {
 }
 
 dependencies {
-  minecraft "net.minecraftforge:forge:$minecraft_version-$forge_version"
-
   final def nvda_controller = 'dev.gegy:nvda-controller-client-java:1.0.0'
   library nvda_controller
   shade(nvda_controller) {
     transitive = false
   }
-
-  if (System.getProperty("idea.sync.active") != "true") {
-    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
-  }
 }
 
-minecraft.runs.all {
-  lazyToken('minecraft_classpath') {
-    configurations.library.copyRecursive().resolve().collect { it.absolutePath }.join(File.pathSeparator)
-  }
-}
+tasks.withType(ProcessResources).configureEach {
+  var replaceProperties = [
+          mod_version: mod_version,
+  ]
+  inputs.properties replaceProperties
 
-mixin {
-  add sourceSets.main, "love_accessibility.refmap.json"
+  filesMatching(['META-INF/neoforge.mods.toml']) {
+    expand replaceProperties
+  }
 }
 
 shadowJar {
@@ -101,25 +92,15 @@ shadowJar {
   archiveClassifier.set('')
 }
 
-reobf {
-  shadowJar {}
+build.dependsOn shadowJar
+
+idea {
+  module {
+    downloadSources = true
+    downloadJavadoc = true
+  }
 }
 
-build.dependsOn shadowJar
-build.dependsOn reobfShadowJar
-
 jar {
-  archiveClassifier = 'slim'
-  manifest {
-    attributes([
-        "Specification-Title"     : "love-accessibility",
-        "Specification-Vendor"    : "lovetropics",
-        "Specification-Version"   : "1",
-        "Implementation-Title"    : project.name,
-        "Implementation-Version"  : "${version}",
-        "Implementation-Vendor"   : "lovetropics",
-        "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-        "MixinConfigs"            : "love_accessibility.mixins.json"
-    ])
-  }
+  archiveClassifier.set('slim')
 }

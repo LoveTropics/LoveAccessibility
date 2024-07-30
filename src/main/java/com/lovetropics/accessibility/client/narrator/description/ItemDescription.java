@@ -1,9 +1,11 @@
 package com.lovetropics.accessibility.client.narrator.description;
 
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 
@@ -24,7 +26,7 @@ public record ItemDescription(Component component) {
         final MutableComponent prefix = Component.literal(item.getCount() + " ");
         final Component typeName = item.getItem().getName(item);
         final List<Component> lines = new ArrayList<>();
-        if (item.hasCustomHoverName()) {
+        if (item.has(DataComponents.CUSTOM_NAME)) {
             lines.add(item.getHoverName());
         }
         lines.add(typeName);
@@ -34,7 +36,7 @@ public record ItemDescription(Component component) {
 
     private static void addTooltip(final Player player, final ItemStack item, final List<Component> lines) {
         final int removeIndex = lines.size();
-        lines.addAll(item.getTooltipLines(player, TooltipFlag.NORMAL));
+        lines.addAll(item.getTooltipLines(Item.TooltipContext.of(player.level()), player, TooltipFlag.NORMAL));
         lines.remove(removeIndex);
     }
 }

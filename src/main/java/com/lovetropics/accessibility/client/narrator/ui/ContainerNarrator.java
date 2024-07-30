@@ -76,7 +76,7 @@ public final class ContainerNarrator {
         @Override
         public boolean equals(final Object o) {
             if (o instanceof Target that) {
-                return slot == that.slot && ItemStack.isSameItemSameTags(item, that.item);
+                return slot == that.slot && ItemStack.isSameItemSameComponents(item, that.item);
             }
             return false;
         }

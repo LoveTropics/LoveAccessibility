@@ -1,0 +1,29 @@
+modLoader = "javafml"
+loaderVersion = "[2,)"
+license="All Rights Reserved"
+
+[[mods]]
+modId="love_accessibility"
+version="$mod_version"
+displayName="Love Accessibility"
+authors="LoveTropics"
+description='''
+Improving Minecraft's accessibility!
+'''
+
+[[mixins]]
+    config = "love_accessibility.mixins.json"
+
+[[dependencies.ltextras]]
+    modId="neoforge"
+    mandatory=true
+    versionRange="[21.0.0,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.ltextras]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.21,)"
+    ordering="NONE"
+    side="BOTH"

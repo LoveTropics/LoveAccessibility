@@ -29,12 +29,11 @@ public record BlockDescription(Component component) {
     }
 
     private static BlockDescription describeSign(@Nullable final LocalPlayer player, final SignBlockEntity sign) {
-        Component message = player == null ? sign.getFrontText().getMessage(0, false)
-                : sign.getTextFacingPlayer(player).getMessage(0, false);
-        // Was using SignBlockEntity.LINES but that no longer seems to exist
+        Component message = player == null || sign.isFacingFrontText(player) ? sign.getFrontText().getMessage(0, false)
+                : sign.getBackText().getMessage(0, false);
         for (int i = 1; i < SignText.LINES; i++) {
-            message = CommonComponents.joinForNarration(message, player == null ? sign.getFrontText().getMessage(i, false)
-                    : sign.getTextFacingPlayer(player).getMessage(i, false));
+            message = CommonComponents.joinForNarration(message, player == null || sign.isFacingFrontText(player) ? sign.getFrontText().getMessage(i, false)
+                    : sign.getBackText().getMessage(i, false));
         }
         return new BlockDescription(message);
     }
